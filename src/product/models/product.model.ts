@@ -9,6 +9,9 @@ export class ProductModel {
   id: number;
   @Column('varchar', { name: 'code', primary: true, length: 45 })
   code: string;
+  //기능 MAIN, SERVICE,CHARGING
+  @Column('varchar', { name: 'method', primary: true, length: 45 })
+  method: string;
   //프로덕 이름
   @Column('varchar', { name: 'name', length: 10, nullable: false })
   name: string;
@@ -39,11 +42,11 @@ export class ProductModel {
   })
   updatedAt: Date;
 
-  @OneToMany(
-    () => ProductReservationModel,
-    (reservation) => reservation.products,
-  )
-  reservations: ProductReservationModel[];
+  // @OneToMany(
+  //   () => ProductReservationModel,
+  //   (reservation) => reservation.products,
+  // )
+  // reservations: ProductReservationModel[];
 
   @OneToMany(() => ProductChargingModel, (chargings) => chargings.products)
   charging: ProductChargingModel[];

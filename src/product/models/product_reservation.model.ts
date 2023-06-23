@@ -18,8 +18,26 @@ export class ProductReservationModel {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('int', { name: 'productsId' })
-  productsId: number;
+  @Column('varchar', { name: 'product_main', nullable: false })
+  product_main: string;
+
+  @Column('boolean', { name: 'product_house_viewing', nullable: false, default: false})
+  product_house_viwing: boolean;
+
+  @Column('boolean', { name: 'product_vicle_viewing', nullable: false, default: false})
+  product_vicle_viewing: boolean;
+
+  @Column('boolean', { name: 'product_airport_pickup', nullable: false, default: false})
+  product_airport_pickup: boolean;
+
+  @Column('boolean', { name: 'product_utility_purchase', nullable: false, default: false})
+  product_utility_purchase: boolean;
+
+  @Column('boolean', { name: 'product_licenses_create', nullable: false, default: false})
+  product_licenses_create: boolean;
+
+  @Column('text', { name: 'product_other', nullable: true})
+  product_other: string;
 
   @Column('varchar', { name: 'date', nullable: false })
   date: string;
@@ -29,25 +47,24 @@ export class ProductReservationModel {
   year: string;
 
   //일별 예약으로 변경
-  @Column('varchar', { name: 'momth', length: 2, nullable: false })
-  momth: string;
+  @Column('varchar', { name: 'month', length: 2, nullable: false })
+  month: string;
 
   //일별 예약으로 변경
   @Column('varchar', { name: 'day', length: 2, nullable: false })
   day: string;
+
+  @Column('varchar', { name: 'startTime', length: 2, nullable: false })
+  startTime: string;
+
+  @Column('varchar', { name: 'endTime', length: 2, nullable: false })
+  endTime: string;
 
   @Column('varchar', { name: 'userUuid', length: 50, nullable: false })
   userUuid: string;
 
   @Column('varchar', { name: 'method', length: 50, nullable: false })
   method: string;
-
-  //취소및 환불규정
-  @Column('text', {
-    name: 'description',
-    nullable: true,
-  })
-  description: string | null;
 
   @Column('datetime', {
     name: 'createdAt',
@@ -64,13 +81,13 @@ export class ProductReservationModel {
   updatedAt: Date;
 
   //커넥션을 지원하는 유저
-  @Column('varchar', { name: 'connect_user', length: 50, nullable: false })
-  connect_user: string;
+  @Column('varchar', { name: 'connecterUuid', length: 50, nullable: true })
+  connecterUuid: string;
 
   //예약한 내역
-  @ManyToOne(() => ProductModel, (product) => product.reservations)
-  @JoinColumn([{ name: 'productsId', referencedColumnName: 'id' }])
-  products: ProductModel;
+  // @ManyToOne(() => ProductModel, (product) => product.reservations)
+  // @JoinColumn([{ name: 'productsId', referencedColumnName: 'id' }])
+  // products: ProductModel;
 
   // //예약 1건당 1개의 지불건
   @OneToOne(() => ProductPaymentModel, (payment) => payment.reservations)

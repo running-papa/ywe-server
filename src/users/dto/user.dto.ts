@@ -9,8 +9,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
   @ApiProperty({
-    description: '3rd party 제공자 ( google, iOS )',
-    example: 'google',
+    description: '3rd party 제공자 ( current, google, iOS )',
+    example: 'current',
   })
   @IsString()
   provider: string;

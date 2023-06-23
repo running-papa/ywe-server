@@ -107,29 +107,24 @@ export class ProductController {
     summary: '프로덕트 예약 조회',
     description: '커넥트의 예약된 날짜를 전달한다.',
   })
-  @ApiQuery({ name: 'uuid', example: 'cf044219-e471-4673-8924-0ba13d46b5fb' })
-  @ApiQuery({ name: 'year', example: '2022' })
-  @ApiQuery({ name: 'month', example: ['01', '02'] })
+  @ApiQuery({ name: 'userUuid', example: 'cf044219-e471-4673-8924-0ba13d46b5fb' })
   async getReservationConnecter(@Param() param) {
     const id = param.id;
     const date = param.date;
-    return await this.productService.getReservation(id, date);
+    return await this.productService.getReservation(param.userUuid);
   }
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/reservation')
   @ApiOperation({
-    summary: '프로덕트 예약 조회',
-    description: '프로덕트 예약정보를 날짜별로 전달한다.',
+    summary: '개인 사용자의 프로덕트 예약 조회',
+    description: '프로덕트 전달한다.',
   })
-  @ApiQuery({ name: 'id', example: '1' })
-  @ApiQuery({ name: 'year', example: '2022' })
-  @ApiQuery({ name: 'month', example: ['01', '02'] })
+  @ApiQuery({ name: 'userUuid', example: 'cf044219-e471-4673-8924-0ba13d46b5fb' })
   async getReservation(@Param() param) {
-    const id = param.id;
-    const date = param.date;
-    return await this.productService.getReservation(id, date);
+   
+    return await this.productService.getReservation(param.userUuid);
   }
 
   @ApiBearerAuth()
@@ -141,7 +136,7 @@ export class ProductController {
       '내가 원하는 일자 하루를 예약한다. 필요한 프로덕트를 표시해주고 내용이 커넥터에게 전달된다',
   })
   @ApiCreatedResponse({
-    description: '신규 프로덕트 예약',
+    description: '회원 예약 리스트 올리기',
     type: ProductConfirmDto,
   })
   async setReservation(@Body() data: ProductConfirmDto, @Req() req) {

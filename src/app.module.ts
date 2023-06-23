@@ -7,6 +7,7 @@ import { UsersModule } from './users/v1/users.module';
 import { AuthModule } from './auth/v1/auth.module';
 import { ProductModule } from './product/v1/product.module';
 import { ConnectUsersModule } from './connect/v1/connect.module';
+import { ScreensModule } from './screens/v1/screens.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ConnectUsersModule } from './connect/v1/connect.module';
     UsersModule,
     ProductModule,
     ConnectUsersModule,
+    ScreensModule,
     // realestateModule,
     // basketModule,
   ],

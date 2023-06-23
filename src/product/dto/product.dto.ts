@@ -1,45 +1,41 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
+export enum ProductMethod {
+  MAIN = 'MAIN', //'메인 비지니스 모델',
+  SERVICE = 'SERVICE', //서비스 기능들,
+  CHARGING = 'CHARGING' //충전 서비스
+ }
+
 export enum ProductCode {
-  RENT_HOUSE_SERCH = 'RENT_HOUSE_SERCH', //'렌트서칭작업',
-  RENT_HOUSE_VIWING = 'RENT_HOUSE_VIWING', //'렌트집 뷰잉',
-  RENT_VICLE_SERCH = 'RENT_VICLE_SERCH', //'렌트카서칭작업',
-  RENT_VICLE_VIWING = 'RENT_VICLE_VIWING', //'렌트카 뷰잉',
+  RIDING_SERVICE_ONLY = 'RIDING_SERVICE_ONLY', //'라이딩서비스만온니',
+  FULL_SERVICE = 'FULL_SERVICE', //원하는지역에 집,차,은행,마트 등컨택, 사용중 번역서비스 포함
+}
+
+export enum ProductServiceCode {
+  RENT_HOUSE_VIEWING = 'RENT_HOUSE_VIEWING', //'렌트집 뷰잉',
+  RENT_VICLE_VIEWING = 'RENT_VICLE_VIEWING', //'렌트카 뷰잉',
   AIRPORT_PICKUP = 'AIRPORT_PICKUP', //'공항픽업',
   UTILITY_PURCHASE = 'UTILITY_PURCHASE', //'유틸리티 신청(가스,전기,티비)',
   LICENSES_CREATE = 'LICENSES_CREATE', //'은행계좌 개설, 체크카드신청, 면허증',
-  SCHOOL_REGISTRATION = 'SCHOOL_REGISTRATION', //'학교등록',
-  DOCUMENT_CREATE = 'DOCUMENT_CREATE', // 문서 작성
-  FOX_1 = 'FOX_1', //'1여우',
-  FOX_5 = 'FOX_5', // '5여우',
-  FOX_10 = 'FOX_10', //'10여우',
-  FOX_YOUTUBE = 'FOX_YOUTUBE', //'1여우',
   OTHER = 'OTHER', //'기타',
 }
 
+export enum ProductChagingCode {
+  FOX_1 = 'FOX_1', //'1',
+  FOX_5 = 'FOX_5', //'5',
+  FOX_10 = 'FOX_10', //'10',
+}
 export class ProductDto {
   @ApiProperty({
     description: '프로덕트 Code',
-    enum: ProductCode,
-    example: [
-      ProductCode.RENT_HOUSE_SERCH,
-      ProductCode.RENT_HOUSE_VIWING,
-      ProductCode.RENT_VICLE_SERCH,
-      ProductCode.RENT_VICLE_VIWING,
-      ProductCode.AIRPORT_PICKUP,
-      ProductCode.UTILITY_PURCHASE,
-      ProductCode.LICENSES_CREATE,
-      ProductCode.SCHOOL_REGISTRATION,
-      ProductCode.DOCUMENT_CREATE,
-      ProductCode.FOX_1,
-      ProductCode.FOX_5,
-      ProductCode.FOX_10,
-      ProductCode.OTHER,
-    ],
   })
   @IsString()
-  code: ProductCode;
+  code: string;
+
+  @ApiProperty({ description: '기능' })
+  @IsString()
+  method: ProductMethod;
 
   @ApiProperty({ description: '프로덕트명' })
   @IsString()
@@ -67,19 +63,8 @@ export class ProductUpdateDto {
     description: '프로덕트 Code',
     enum: ProductCode,
     example: [
-      ProductCode.RENT_HOUSE_SERCH,
-      ProductCode.RENT_HOUSE_VIWING,
-      ProductCode.RENT_VICLE_SERCH,
-      ProductCode.RENT_VICLE_VIWING,
-      ProductCode.AIRPORT_PICKUP,
-      ProductCode.UTILITY_PURCHASE,
-      ProductCode.LICENSES_CREATE,
-      ProductCode.SCHOOL_REGISTRATION,
-      ProductCode.DOCUMENT_CREATE,
-      ProductCode.FOX_1,
-      ProductCode.FOX_5,
-      ProductCode.FOX_10,
-      ProductCode.OTHER,
+      ProductCode.RIDING_SERVICE_ONLY,
+      ProductCode.FULL_SERVICE,
     ],
   })
   @IsString()

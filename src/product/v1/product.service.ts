@@ -6,37 +6,13 @@ import * as moment from 'moment';
 import * as path from 'path';
 import { UsersService } from 'src/users/v1/users.service';
 import { In, Repository } from 'typeorm';
-import { ProductCode, ProductDto, ProductUpdateDto } from '../dto/product.dto';
+import { ProductChagingCode, ProductCode, ProductDto, ProductUpdateDto } from '../dto/product.dto';
 import { ProductConfirmDto, reservationCode } from '../dto/productConfirm.dto';
 import { ProductChringDto } from '../dto/productPayment.dto';
 import { ProductModel } from '../models/product.model';
 import { ProductChargingModel } from '../models/product_charging.model';
 import { ProductPaymentModel } from '../models/product_payment.model';
 import { ProductReservationModel } from '../models/product_reservation.model';
-// import { UserAccountModel } from 'src/users/models/users.model';
-// import { getRepository, In, Raw, Repository } from 'typeorm';
-// import { productDto } from '../dto/product.dto';
-// import {
-//   productASRequestDto,
-//   productEnquiryRequestDto
-// } from '../dto/productASRequest.dto';
-// import { productConfirmDto, reservationCode } from '../dto/productConfirm.dto';
-// import {
-//   productNoticeDto,
-//   productUpdateNoticeDto
-// } from '../dto/productNotice.dto';
-// import { productPushDeleteDto, productPushDto } from '../dto/productPush.dto';
-// import { productSlaveDto, slaveCode } from '../dto/productSlave.dto';
-// import { productSlaveControlDto } from '../dto/productSlaveControl.dto';
-// import { productTermsDto } from '../dto/productTerms.dto';
-// import { productUpdateDto } from '../dto/productUpdate.dto';
-// import { productModel } from '../models/product.model';
-// import { productNoticeModel } from '../models/product_notice.model';
-// import { productPaymentModel } from '../models/product_payment.model';
-// import { productPushModel } from '../models/product_push.model';
-// import { productReservationModel } from '../models/product_reservation.model';
-// import { productSlaveModel } from '../models/product_slave.model';
-// import { productTermsModel } from '../models/product_terms';
 
 @Injectable()
 export class ProductService {
@@ -222,13 +198,13 @@ export class ProductService {
       //3. 유저 테이블에 여우+ 해주기
       let fox = 0;
       switch (product.code) {
-        case ProductCode.FOX_1:
+        case ProductChagingCode.FOX_1:
           fox = 1;
           break;
-        case ProductCode.FOX_5:
+        case ProductChagingCode.FOX_5:
           fox = 5;
           break;
-        case ProductCode.FOX_10:
+        case ProductChagingCode.FOX_10:
           fox = 10;
           break;
       }
@@ -287,85 +263,57 @@ export class ProductService {
     }
   }
 
-  async getproductReservation(productId, date) {
+  async getReservation(userUuid) {
+
     const data = await this.reservationRepository.find({
-      productsId: productId,
-      date: date,
-      method: In([reservationCode.COMPLETE, reservationCode.USED]),
+      userUuid : userUuid,
+      method: In([reservationCode.WATING, reservationCode.COMPLETE, reservationCode.USED]),
     });
 
-    if (data != null) return data;
-    else return '오늘 예약건이 없습니다.';
-  }
+    let message = '';
 
-  async getReservation(productsId, date) {
-    const data = await this.getproductReservation(productsId, date);
+    if ( data == null) 
+    {
+      message = '에약된 내역이 없습니다.'
+    }
+    else
+    {
+      message = '에약 조회 완료.'
+    }
+
     return {
       statusCode: 201,
-      message: '예약조회 완료.',
+      message: message,
       data: data,
     };
   }
 
   async setReservation(data: ProductConfirmDto, user) {
     try {
-      //중복예약체크
-      const checkReservation = await this.checkReservation(data);
-      //중복된 예약이 있음
-      if (checkReservation == false) {
-        return {
-          statusCode: 401,
-          message: '예약시간을 확인해주세요.',
-        };
-      }
+    
+      const reservation = await this.reservationRepository.save({
+        product_main: data.product_main,
+        product_house_viwing: data.product_house_viwing,
+        product_vicle_viewing: data.product_vicle_viewing,
+        product_airport_pickup: data.product_airport_pickup,
+        product_utility_purchase: data.product_utility_purchase,
+        product_licenses_create: data.product_licenses_create,
+        product_other: data.product_other,
 
-      //예약을 하기위한유저 Fox 검증
-      const userFox = await this.usersService.checkFox(user);
+        date: data.year + data.month + data.day,
+        year: data.year,
+        month : data.month,
+        day : data.day,
+        startTime : data.startTime,
+        endTime : data.endTime,
+        userUuid : user.uuid,
+        method : reservationCode.WATING
 
-      console.log('userFox = ', userFox);
-      if (userFox < 5) {
-        return {
-          statusCode: 401,
-          message: '충전이 필요합니다.',
-        };
-      }
-      //예약을 진행 하기 위한 프로덕트 fox 금액 확인
-      //const product = await this.getProductDetail(data.productsId);
+      });
 
-      // if (userFox == 0 || userFox < product.data.price) {
-      //   return {
-      //     statusCode: 401,
-      //     message: 'FOX 충전이 필요합니다.',
-      //   };
-      // }
-
-      // const reservation = await this.reservationRepository.save({
-      //   productsId: data.productsId,
-      //   date: data.date,
-      //   time: data.time,
-      //   userUuid: user.uuid,
-      //   method: data.method,
-      // });
-
-      // const payment = await this.paymentRepository.save({
-      //   productsId: data.productsId,
-      //   reservationsId: reservation.id,
-      //   userUuid: user.uuid,
-      //   payment: data.payment,
-      //   payment_date: moment().toDate(),
-      //   method: data.method,
-      // });
-
-      // if (reservation != null || payment != null) {
-      //   return {
-      //     statusCode: 201,
-      //     message: '예약이 완료 되었습니다.',
-      //     data: data,
-      //   };
-      // } else {
       return {
-        statusCode: 401,
-        message: '예약이 실패 하였습니다.',
+        statusCode: 201,
+        message: '입찰이 진행중입니다.',
       };
       //}
     } catch (e) {
@@ -382,19 +330,20 @@ export class ProductService {
     const reservation_date = data.year + data.month + data.day;
     console.log(reservation_date);
 
-    const check_reservation = await this.reservationRepository.findOne({
-      connect_user: data.connecter_uuid,
-      date: reservation_date,
-    });
+    // const check_reservation = await this.reservationRepository.findOne({
+    //   connect_user: data.connecter_uuid,
+    //   date: reservation_date,
+    // });
 
-    console.log(
-      'check_reservation 현재 커넷터가 예약이 있는지 확인',
-      check_reservation,
-    );
+    // console.log(
+    //   'check_reservation 현재 커넷터가 예약이 있는지 확인',
+    //   check_reservation,
+    // );
 
-    if (check_reservation != null) return false;
+    // if (check_reservation != null) return false;
     // 예약 불가능
-    else return true; // 예약가능
+    //else 
+    return true; // 예약가능
 
     // const nowTime = moment().format('HHmm');
     // //전시회 이후에 동작할 사항 리턴 넣도록 한다.

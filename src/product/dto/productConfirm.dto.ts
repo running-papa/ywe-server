@@ -6,10 +6,10 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { ProductCode } from './product.dto';
+import { ProductCode, ProductServiceCode } from './product.dto';
 
 export enum reservationCode {
-  WATING = '예약대기중',
+  WATING = '입찰중',
   COMPLETE = '예약완료',
   CANCEL = '예약취소',
   USED = '이용중',
@@ -29,30 +29,60 @@ export class ProductConfirmDto {
   @IsString()
   day: string;
 
-  @ApiProperty({
-    description: '원하는 프로젝트 미리 체크',
-    enum: ProductCode,
-    example: [
-      ProductCode.RENT_HOUSE_SERCH,
-      ProductCode.RENT_HOUSE_VIWING,
-      ProductCode.RENT_VICLE_SERCH,
-      ProductCode.RENT_VICLE_VIWING,
-      ProductCode.AIRPORT_PICKUP,
-      ProductCode.UTILITY_PURCHASE,
-      ProductCode.LICENSES_CREATE,
-      ProductCode.SCHOOL_REGISTRATION,
-      ProductCode.OTHER,
-    ],
-  })
-  @IsArray()
-  product: string[];
+  @ApiProperty({ description: '예약 날짜 StartTime', example: '10' })
+  @IsString()
+  startTime: string;
+
+  @ApiProperty({ description: '예약 날짜 endTime', example: '15' })
+  @IsString()
+  endTime: string;
 
   @ApiProperty({
-    description: '추가 예약사항',
-    example: '집뷰잉, 차뷰잉, 하고싶어요',
+    description: '원하는 메인 서비스 종류 선택',
+    enum: ProductCode,
+    example: [
+      ProductCode.RIDING_SERVICE_ONLY,
+      ProductCode.FULL_SERVICE,
+    ],
   })
   @IsString()
-  description: string;
+  product_main: string;
+
+  @ApiProperty({
+    description: '집뷰잉 boolean',
+  })
+  @IsBoolean()
+  product_house_viwing: boolean;
+
+  @ApiProperty({
+    description: '차뷰잉 boolean',
+  })
+  @IsBoolean()
+  product_vicle_viewing: boolean;
+
+  @ApiProperty({
+    description: '공항픽업 boolean',
+  })
+  @IsBoolean()
+  product_airport_pickup: boolean;
+
+  @ApiProperty({
+    description: '유틸리티 신청 boolean',
+  })
+  @IsBoolean()
+  product_utility_purchase: boolean;
+
+  @ApiProperty({
+    description: '운전면허, 통장 boolean',
+  })
+  @IsBoolean()
+  product_licenses_create: boolean;
+
+  @ApiProperty({
+    description: '그외 요청사항 텍스트',
+  })
+  @IsString()
+  product_other: string;
 
   @ApiProperty({
     description: '예약 현황',
@@ -66,18 +96,4 @@ export class ProductConfirmDto {
   })
   @IsString()
   method: string;
-
-  @ApiProperty({
-    description: '예약할 커넥터 uuid',
-    example: 'cf044219-e471-4673-8924-0ba13d46b5fb',
-  })
-  @IsString()
-  connecter_uuid: string;
-  //   @ApiProperty({ description: '환불여부' })
-  //   @IsBoolean()
-  //   refund: boolean;
-
-  //   @ApiProperty({ description: '환불 완료 날짜' })
-  //   @IsDate()
-  //   refund_date: Date | null;
 }
