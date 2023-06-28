@@ -66,12 +66,9 @@ export class ProductPaymentModel {
   @JoinColumn([{ name: 'productsId', referencedColumnName: 'id' }])
   products: ProductModel;
 
-  @OneToOne(
-    () => ProductReservationModel,
-    (reservation) => reservation.payments,
-  )
+  @OneToOne(() => ProductReservationModel,(reservation) => reservation.payments)
   @JoinColumn([{ name: 'reservationsId', referencedColumnName: 'id' }])
-  reservations: ProductReservationModel;
+  reservation: ProductReservationModel;
 
   @OneToOne(() => ProductChargingModel, (charging) => charging.payments)
   @JoinColumn([{ name: 'chargingId', referencedColumnName: 'id' }])

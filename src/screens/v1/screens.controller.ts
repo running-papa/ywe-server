@@ -40,11 +40,8 @@ export class ScreensController {
     })
     async getAuthHome(@Request() req) {
   
-      console.log(req.user);
-  
-      await this.ScreensService.getHome(req.user);
-
-      return req.user;
+      return await this.ScreensService.getHome(req.user);
+      
     }
 
 
@@ -56,16 +53,16 @@ export class ScreensController {
   async getlocalHome() {
 
     let user = {
-      uuid : '',
-      email : '',
-      provider : '',
-      nicName : '여우님',
-      phone : '',
+      uuid : null,
+      email : null,
+      provider : null,
+      nickName : '여우님',
+      phone : null,
       fox : 0,
     }
-    await this.ScreensService.getHome(user);
+    
 
-    return user;
+    return await this.ScreensService.getHome(user);;
   }
  
   

@@ -13,6 +13,8 @@ import { ProductModel } from '../models/product.model';
 import { ProductChargingModel } from '../models/product_charging.model';
 import { ProductPaymentModel } from '../models/product_payment.model';
 import { ProductReservationModel } from '../models/product_reservation.model';
+import { ProductAdvertiseModel } from '../models/product_advertise.model';
+import { advertiseType, businessType } from '../dto/productAdvertise.dto';
 
 @Injectable()
 export class ProductService {
@@ -28,7 +30,10 @@ export class ProductService {
     private reservationRepository: Repository<ProductReservationModel>,
     @InjectRepository(ProductChargingModel)
     private chargingRepository: Repository<ProductChargingModel>, // @InjectRepository(ProductPushModel) // private pushRepository: Repository<ProductPushModel>, // @InjectRepository(ProductNoticeModel) // private noticeRepository: Repository<ProductNoticeModel>, // @InjectRepository(ProductTermsModel) // private termsRepository: Repository<ProductTermsModel>,
-  ) {}
+    @InjectRepository(ProductAdvertiseModel)
+    private advertiseRepository: Repository<ProductAdvertiseModel>,
+  
+    ) {}
 
   async saveProduct(product: ProductDto) {
     try {
@@ -377,6 +382,36 @@ export class ProductService {
     // console.log('--------------------------------------');
     // return true;
   }
+
+  async setAdvertise (data) {
+    await this.advertiseRepository.save(data);
+  }
+  async getAllAdvertise() {
+    const premium = await this.advertiseRepository.find(
+      {
+        business_type : businessType.PREMIUM
+      }
+    )
+
+    const youtube = await this.advertiseRepository.find({
+      advertise_type : advertiseType.YOUTUBE
+    })
+
+    const restaurnt = await this.advertiseRepository.find({
+      advertise_type : advertiseType.RESTAURANT 
+    })
+
+    //프리미엄 광고
+
+    const data = {
+      premium : premium,
+      youtube : youtube,
+      restaurnt : restaurnt,
+    }
+    return data;
+  }
+
+
   // async saveproductSlave(slave: productSlaveDto) {
   //   await this.slaveRepository.save({
   //     productsId: slave.productsId,

@@ -9,6 +9,7 @@ import { ProductReservationModel } from '../models/product_reservation.model';
 import { ProductTermsModel } from '../models/product_terms';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
+import { ProductAdvertiseModel } from '../models/product_advertise.model';
 @Module({
   imports: [
     forwardRef(() => UsersModule),
@@ -17,7 +18,7 @@ import { ProductService } from './product.service';
       ProductReservationModel,
       ProductChargingModel,
       ProductPaymentModel,
-      // ProductPushModel,
+      ProductAdvertiseModel,
       // ProductNoticeModel,
       // ProductTermsModel,
     ]),

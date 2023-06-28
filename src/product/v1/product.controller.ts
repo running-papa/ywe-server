@@ -23,6 +23,7 @@ import { ProductDto, ProductUpdateDto } from '../dto/product.dto';
 import { ProductConfirmDto } from '../dto/productConfirm.dto';
 import { ProductChringDto } from '../dto/productPayment.dto';
 import { ProductService } from './product.service';
+import { ProductAdvertiseDto } from '../dto/productAdvertise.dto';
 // import { productDto } from '../dto/product.dto';
 // import {
 //   productASRequestDto,
@@ -141,6 +142,20 @@ export class ProductController {
   })
   async setReservation(@Body() data: ProductConfirmDto, @Req() req) {
     return await this.productService.setReservation(data, req.user); //, missionRoute);
+  }
+
+  @Post('/advertise')
+  @ApiOperation({
+    summary: '광고 등록하기',
+    description:
+      '광고를 등록',
+  })
+  @ApiCreatedResponse({
+    description: '광고 DTO 입력',
+    type: ProductAdvertiseDto,
+  })
+  async setAdvertise(@Body() data: ProductAdvertiseDto, @Req() req) {
+    return await this.productService.setAdvertise(data); 
   }
 
   // @Post('/slave')

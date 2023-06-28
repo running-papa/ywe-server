@@ -90,7 +90,7 @@ export class ProductReservationModel {
   // products: ProductModel;
 
   // //예약 1건당 1개의 지불건
-  @OneToOne(() => ProductPaymentModel, (payment) => payment.reservations)
+  @OneToOne(() => ProductPaymentModel, (payment) => payment.reservation)
   payments: ProductPaymentModel;
   // //예약한 유저 정보
   @ManyToMany(() => UsersModel, (user) => user.reservation)

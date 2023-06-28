@@ -20,19 +20,9 @@ export class ScreensService {
   ) {}
 
   async getHome(user) {
-    //user 예약상태 가져오기
 
-    let reservation = null;
-    if ( user.uuid != null)
-    {
-      reservation = await this.productService.getReservation(user.uuid);
-    }
-
-
-
-
-
-    const data = {
+    //초기화
+    let data = {
       status : 201,
       data : {
         user : {
@@ -40,23 +30,59 @@ export class ScreensService {
           nickName : user.nickName,
           phone : user.phone,
         },
-        premium_advertising : {
-          
+        premium_advertise : {
+          data : []
         },
         reservation : {
-          message : reservation.message,
-          data : reservation.data,
+          message : '',
+          data : [],
+          connecter : '',
         },
         youtube : {
-          
+          data : []
         },
-        advertising : {
-
+        restaurnt : {
+          data : []
         }
 
       }
     }
-    return
+
+    //광고 가져오기
+    let advertise = await this. productService.getAllAdvertise();
+    data.data.premium_advertise.data = advertise.premium;
+    data.data.youtube.data = advertise.youtube;
+    data.data.restaurnt.data = advertise.restaurnt;
+    //user 예약상태 가져오기
+
+    let reservation = null;
+
+    if ( user.uuid == null)
+    {
+      data.data.reservation.message = '꿈을 현실로, 캐나다 정착 서비스 \n 편안한 이주생활 여우이 정착서비스';
+      data.data.reservation.data = [];
+      console.log('여기로 들어옴1')
+    }
+    else
+    {
+      console.log('여기로 들어옴')
+      reservation = await this.productService.getReservation(user.uuid);
+
+      if ( reservation.data == null)
+        data.data.reservation.message = '꿈을 현실로, 캐나다 정착 서비스 \n 편안한 이주생활 여우이 정착서비스';
+      else
+      {
+        data.data.reservation.message = user.nickName + ' 예약 내역';
+        data.data.reservation.connecter = reservation.data.connect_user;
+      }
+      data.data.reservation.data = reservation.data;
+    }
+
+    
+    
+    
+
+    return data;
   }
   
 }
